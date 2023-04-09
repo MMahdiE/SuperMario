@@ -11,15 +11,15 @@ import java.io.InputStreamReader;
 
 public class TileManager {
     GamePanel gp;
-    Tile[] tile;
-    int[][] mapTileNum;
+    public Tile[] tile;
+    public int[][] mapTileNum;
 
     public TileManager(GamePanel gp) {
         this.gp = gp;
 
         tile = new Tile[10];
 
-        mapTileNum = new int[gp.maxScreenRow][gp.maxWorldCol];
+        mapTileNum = new int[gp.maxWorldCol][gp.maxScreenRow];
         loadMap("/maps/map01.txt");
 
         getTileImage();
@@ -39,7 +39,7 @@ public class TileManager {
 
                 while(col < gp.maxWorldCol) {
                     int num = Integer.parseInt(numbers[col]);
-                    mapTileNum[row][col] = num;
+                    mapTileNum[col][row] = num;
 
                     col++;
                 }
@@ -60,9 +60,11 @@ public class TileManager {
 
             tile[1] = new Tile();
             tile[1].image = ImageIO.read(getClass().getResourceAsStream("/tiles/ground-brown.png"));
+            tile[1].collision = true;
 
             tile[2] = new Tile();
             tile[2].image = ImageIO.read(getClass().getResourceAsStream("/tiles/brick-brown.png"));
+            tile[2].collision = true;
         } catch (IOException e)  {
             e.printStackTrace();
         }
@@ -80,7 +82,7 @@ public class TileManager {
                 int screenX = worldX - gp.player.worldX + gp.player.screenX;
 
                 if(worldX + gp.tileWidth > gp.player.worldX - gp.player.screenX && worldX - gp.tileWidth < gp.player.worldX + gp.player.screenX) {
-                    g2.drawImage(tile[mapTileNum[row][worldCol]].image, screenX, y, gp.tileWidth, gp.tileHeight, null);
+                    g2.drawImage(tile[mapTileNum[worldCol][row]].image, screenX, y, gp.tileWidth, gp.tileHeight, null);
                 }
                 worldCol++;
             }

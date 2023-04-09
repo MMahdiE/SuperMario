@@ -11,7 +11,7 @@ public class GamePanel extends JPanel implements Runnable{
     //Tile settings
     final int originalTileWidth = 12;
     final int originalTileHeight = 16;
-    final int scale = 3;
+    public final int scale = 3;
     public final int tileWidth = originalTileWidth * scale;
     public final int tileHeight = originalTileHeight * scale;
 
@@ -31,6 +31,7 @@ public class GamePanel extends JPanel implements Runnable{
     KeyHandler key = new KeyHandler();
     public Player player = new Player(this, key);
     TileManager tileManager = new TileManager(this);
+    public CollisionChecker cChecker = new CollisionChecker(this);
 
 
     public GamePanel() {
