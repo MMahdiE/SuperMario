@@ -33,10 +33,10 @@ public class Player extends Entity{
         this.gp = gp;
         this.keyH = keyH;
 
-        accelerationHorizontal = gp.FPS/1200.0/2;
+        accelerationHorizontal = gp.FPS/1200.0;
         maxHorizontalVelocity = gp.FPS/12;
         gravitationalAcceleration = gp.FPS/480.0 * -1;
-        maxVerticalVelocity = gp.FPS/30;
+        maxVerticalVelocity = gp.FPS/20;
 
 
         screenX = (gp.screenWidth - gp.tileWidth) / 2;

@@ -7,16 +7,15 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-public class OBJ_Coin extends SuperObject{
+public class OBJ_MysteryBlock extends SuperObject{
 
-    public OBJ_Coin() {
-        name = "Coin";
-        image = new BufferedImage[4];
+    public OBJ_MysteryBlock() {
+        name = "Mystery Block";
+        image = new BufferedImage[3];
         try {
-            image[0] = ImageIO.read(getClass().getResourceAsStream("/objects/coin01.png"));
-            image[1] = ImageIO.read(getClass().getResourceAsStream("/objects/coin02.png"));
-            image[2] = ImageIO.read(getClass().getResourceAsStream("/objects/coin03.png"));
-            image[3] = ImageIO.read(getClass().getResourceAsStream("/objects/coin04.png"));
+            image[0] = ImageIO.read(getClass().getResourceAsStream("/objects/mystery-block01.png"));
+            image[1] = ImageIO.read(getClass().getResourceAsStream("/objects/mystery-block02.png"));
+            image[2] = ImageIO.read(getClass().getResourceAsStream("/objects/mystery-block03.png"));
         }catch (IOException e) {
             e.printStackTrace();
         }
@@ -27,8 +26,8 @@ public class OBJ_Coin extends SuperObject{
 
         if(worldX + gp.tileWidth > gp.player.worldX - gp.player.screenX && worldX - gp.tileWidth < gp.player.worldX + gp.player.screenX) {
             spriteCounter++;
-            if(spriteCounter == gp.FPS/4) {
-                if (spriteNum != 4) {
+            if(spriteCounter == gp.FPS/3) {
+                if (spriteNum != 3) {
                     spriteNum++;
                 }
                 else {
@@ -40,3 +39,4 @@ public class OBJ_Coin extends SuperObject{
         }
     }
 }
+

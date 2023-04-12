@@ -40,7 +40,7 @@ public class CollisionChecker {
         }
         else if(gp.player.velocityHorizontal > 0) {
             entityRightWorldX += (int) entity.velocityHorizontal;
-            if(entityRightWorldX > gp.worldWidth) {
+            if(entityRightWorldX >= gp.worldWidth) {
                 entity.collisionHorizontalOn = true;
             }
             else {

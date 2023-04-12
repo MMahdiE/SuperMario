@@ -1,6 +1,7 @@
 package Main;
 
 import object.OBJ_Coin;
+import object.OBJ_MysteryBlock;
 
 public class AssetSetter {
     GamePanel gp;
@@ -17,5 +18,13 @@ public class AssetSetter {
         gp.obj[1] = new OBJ_Coin();
         gp.obj[1].worldX = 2100;
         gp.obj[1].y = 5 * gp.tileHeight;
+
+        gp.obj[2] = new OBJ_MysteryBlock();
+        gp.obj[2].worldX = 48 * gp.tileWidth;
+        gp.obj[2].y = 6 * gp.tileHeight;
+
+        gp.obj[3] = new OBJ_MysteryBlock();
+        gp.obj[3].worldX = 54 * gp.tileWidth;
+        gp.obj[3].y = 5 * gp.tileHeight;
     }
 }
