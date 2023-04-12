@@ -14,10 +14,15 @@ public class Player extends Entity{
     KeyHandler keyH;
 
     public final int screenX;
+    double accelerationHorizontal;
+    int maxHorizontalVelocity;
 
     public Player(GamePanel gp, KeyHandler keyH) {
         this.gp = gp;
         this.keyH = keyH;
+
+        accelerationHorizontal = gp.FPS/1200.0;
+        maxHorizontalVelocity = gp.FPS/12;
 
         screenX = (gp.screenWidth - gp.tileWidth) / 2;
 
@@ -62,7 +67,7 @@ public class Player extends Entity{
     public void setDefaultValues() {
         worldX = 2000;
         y = 5 * gp.tileHeight;
-        velocity = gp.FPS/12;
+        velocityHorizontal = 0.0;
         direction = "right";
     }
 
@@ -81,12 +86,10 @@ public class Player extends Entity{
                 direction = "left";
             }
 
-            //Check tile collision
-            collisionOn = false;
-            gp.cChecker.checkTile(this);
+
 
             //If collisionOn is false, player can move
-            if(collisionOn == false) {
+//            if(collisionOn == false) {
                 if (keyH.up) {
                     //y += velocity;
                 }
@@ -95,16 +98,23 @@ public class Player extends Entity{
                 }
                 if (keyH.right) {
                     direction = "right";
-                    worldX += velocity;
+                    if((velocityHorizontal + accelerationHorizontal) < maxHorizontalVelocity) {
+                        velocityHorizontal += accelerationHorizontal;
+                    }
                 }
                 if (keyH.left) {
-                    direction = "left";
-                    worldX -= velocity;
+                    if((velocityHorizontal - accelerationHorizontal) > (-maxHorizontalVelocity)) {
+                        velocityHorizontal -= accelerationHorizontal;
+                    }
                 }
+//            }
+
+            if(collisionOn) {
+                velocityHorizontal = 0;
             }
 
             spriteCounter++;
-            if(spriteCounter > velocity*2/5) {
+            if(spriteCounter > gp.FPS/6) {
                 if(spriteNum == 10) {
                     spriteNum = 1;
                 }
@@ -114,6 +124,29 @@ public class Player extends Entity{
                 spriteCounter = 0;
             }
         }
+        else {
+            if(velocityHorizontal > 0) {
+                velocityHorizontal -= (2 * accelerationHorizontal);
+                if(velocityHorizontal < 0) {
+                    velocityHorizontal = 0;
+                }
+            }
+            else if(velocityHorizontal < 0) {
+                velocityHorizontal += (2 * accelerationHorizontal);
+                if(velocityHorizontal > 0) {
+                    velocityHorizontal = 0;
+                }
+            }
+        }
+
+        //Check tile collision
+        collisionOn = false;
+        gp.cChecker.checkTile(this);
+        if(collisionOn) {
+            velocityHorizontal = 0.0;
+        }
+
+        worldX += (int) velocityHorizontal;
     }
 
     public void draw(Graphics2D g2) {
