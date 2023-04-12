@@ -7,7 +7,8 @@ public class Entity {
     public int worldX;
     public int y;
     public int velocity;
-    BufferedImage walkLeft1, walkLeft2, walkRight1, walkRight2;
+    BufferedImage[] walkRight = new BufferedImage[10];
+    BufferedImage[] walkLeft = new BufferedImage[10];
     public String direction;
     int spriteCounter = 0;
     int spriteNum = 1;

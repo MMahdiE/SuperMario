@@ -33,10 +33,27 @@ public class Player extends Entity{
 
     public void getPlayerImage() {
         try{
-            walkLeft1 = ImageIO.read(getClass().getResourceAsStream("/Player/walking-left-1.png"));
-            walkLeft2 = ImageIO.read(getClass().getResourceAsStream("/Player/walking-left-2.png"));
-            walkRight1 = ImageIO.read(getClass().getResourceAsStream("/Player/walking-1.png"));
-            walkRight2 = ImageIO.read(getClass().getResourceAsStream("/Player/walking-2.png"));
+            walkRight[0] = ImageIO.read(getClass().getResourceAsStream("/Player/walk01.png"));
+            walkRight[1] = ImageIO.read(getClass().getResourceAsStream("/Player/walk02.png"));
+            walkRight[2] = ImageIO.read(getClass().getResourceAsStream("/Player/walk03.png"));
+            walkRight[3] = ImageIO.read(getClass().getResourceAsStream("/Player/walk04.png"));
+            walkRight[4] = ImageIO.read(getClass().getResourceAsStream("/Player/walk05.png"));
+            walkRight[5] = ImageIO.read(getClass().getResourceAsStream("/Player/walk06.png"));
+            walkRight[6] = ImageIO.read(getClass().getResourceAsStream("/Player/walk07.png"));
+            walkRight[7] = ImageIO.read(getClass().getResourceAsStream("/Player/walk08.png"));
+            walkRight[8] = ImageIO.read(getClass().getResourceAsStream("/Player/walk09.png"));
+            walkRight[9] = ImageIO.read(getClass().getResourceAsStream("/Player/walk10.png"));
+
+            walkLeft[0] = ImageIO.read(getClass().getResourceAsStream("/Player/walk-left01.png"));
+            walkLeft[1] = ImageIO.read(getClass().getResourceAsStream("/Player/walk-left02.png"));
+            walkLeft[2] = ImageIO.read(getClass().getResourceAsStream("/Player/walk-left03.png"));
+            walkLeft[3] = ImageIO.read(getClass().getResourceAsStream("/Player/walk-left04.png"));
+            walkLeft[4] = ImageIO.read(getClass().getResourceAsStream("/Player/walk-left05.png"));
+            walkLeft[5] = ImageIO.read(getClass().getResourceAsStream("/Player/walk-left06.png"));
+            walkLeft[6] = ImageIO.read(getClass().getResourceAsStream("/Player/walk-left07.png"));
+            walkLeft[7] = ImageIO.read(getClass().getResourceAsStream("/Player/walk-left08.png"));
+            walkLeft[8] = ImageIO.read(getClass().getResourceAsStream("/Player/walk-left09.png"));
+            walkLeft[9] = ImageIO.read(getClass().getResourceAsStream("/Player/walk-left10.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -87,12 +104,12 @@ public class Player extends Entity{
             }
 
             spriteCounter++;
-            if(spriteCounter > velocity*2) {
-                if(spriteNum == 1) {
-                    spriteNum = 2;
-                }
-                else if(spriteNum == 2) {
+            if(spriteCounter > velocity*2/5) {
+                if(spriteNum == 10) {
                     spriteNum = 1;
+                }
+                else {
+                    spriteNum++;
                 }
                 spriteCounter = 0;
             }
@@ -104,20 +121,10 @@ public class Player extends Entity{
 
         switch (direction) {
             case "right":
-                if(spriteNum == 1) {
-                    image = walkRight1;
-                }
-                if(spriteNum == 2) {
-                    image = walkRight2;
-                }
+                image = walkRight[spriteNum-1];
                 break;
             case "left":
-                if(spriteNum == 1) {
-                    image = walkLeft1;
-                }
-                if(spriteNum == 2) {
-                    image = walkLeft2;
-                }
+                image = walkLeft[spriteNum-1];
                 break;
         }
 
