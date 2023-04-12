@@ -16,13 +16,28 @@ public class Player extends Entity{
     public final int screenX;
     double accelerationHorizontal;
     int maxHorizontalVelocity;
+    double gravitationalAcceleration;
+    int maxVerticalVelocity;
+    boolean jumping;
+    boolean falling;
+    int distanceJumped;
+    BufferedImage jumpRight;
+    BufferedImage jumpLeft;
+    BufferedImage wantedToGoRight;
+    BufferedImage wantedToGoLeft;
+    BufferedImage standStillRight;
+    BufferedImage standStillLeft;
+
 
     public Player(GamePanel gp, KeyHandler keyH) {
         this.gp = gp;
         this.keyH = keyH;
 
-        accelerationHorizontal = gp.FPS/1200.0;
+        accelerationHorizontal = gp.FPS/1200.0/2;
         maxHorizontalVelocity = gp.FPS/12;
+        gravitationalAcceleration = gp.FPS/480.0 * -1;
+        maxVerticalVelocity = gp.FPS/30;
+
 
         screenX = (gp.screenWidth - gp.tileWidth) / 2;
 
@@ -30,7 +45,8 @@ public class Player extends Entity{
         solidArea.x = 1 * gp.scale;
         solidArea.y = 2 * gp.scale;
         solidArea.width = gp.tileWidth - (2*solidArea.x);
-        solidArea.height = gp.tileHeight - (2*solidArea.y);
+        //Why do I need the - 1 ???????????????????????????????????????????????????????????????????????
+        solidArea.height = gp.tileHeight - (solidArea.y) - 1;
 
         setDefaultValues();
         getPlayerImage();
@@ -38,101 +54,84 @@ public class Player extends Entity{
 
     public void getPlayerImage() {
         try{
+            walkRight = new BufferedImage[4];
+            walkLeft = new BufferedImage[4];
+
             walkRight[0] = ImageIO.read(getClass().getResourceAsStream("/Player/walk01.png"));
             walkRight[1] = ImageIO.read(getClass().getResourceAsStream("/Player/walk02.png"));
             walkRight[2] = ImageIO.read(getClass().getResourceAsStream("/Player/walk03.png"));
-            walkRight[3] = ImageIO.read(getClass().getResourceAsStream("/Player/walk04.png"));
-            walkRight[4] = ImageIO.read(getClass().getResourceAsStream("/Player/walk05.png"));
-            walkRight[5] = ImageIO.read(getClass().getResourceAsStream("/Player/walk06.png"));
-            walkRight[6] = ImageIO.read(getClass().getResourceAsStream("/Player/walk07.png"));
-            walkRight[7] = ImageIO.read(getClass().getResourceAsStream("/Player/walk08.png"));
-            walkRight[8] = ImageIO.read(getClass().getResourceAsStream("/Player/walk09.png"));
-            walkRight[9] = ImageIO.read(getClass().getResourceAsStream("/Player/walk10.png"));
+            walkRight[3] = ImageIO.read(getClass().getResourceAsStream("/Player/walk02.png"));
 
-            walkLeft[0] = ImageIO.read(getClass().getResourceAsStream("/Player/walk-left01.png"));
-            walkLeft[1] = ImageIO.read(getClass().getResourceAsStream("/Player/walk-left02.png"));
-            walkLeft[2] = ImageIO.read(getClass().getResourceAsStream("/Player/walk-left03.png"));
-            walkLeft[3] = ImageIO.read(getClass().getResourceAsStream("/Player/walk-left04.png"));
-            walkLeft[4] = ImageIO.read(getClass().getResourceAsStream("/Player/walk-left05.png"));
-            walkLeft[5] = ImageIO.read(getClass().getResourceAsStream("/Player/walk-left06.png"));
-            walkLeft[6] = ImageIO.read(getClass().getResourceAsStream("/Player/walk-left07.png"));
-            walkLeft[7] = ImageIO.read(getClass().getResourceAsStream("/Player/walk-left08.png"));
-            walkLeft[8] = ImageIO.read(getClass().getResourceAsStream("/Player/walk-left09.png"));
-            walkLeft[9] = ImageIO.read(getClass().getResourceAsStream("/Player/walk-left10.png"));
+            walkLeft[0] = ImageIO.read(getClass().getResourceAsStream("/Player/walk01-left.png"));
+            walkLeft[1] = ImageIO.read(getClass().getResourceAsStream("/Player/walk02-left.png"));
+            walkLeft[2] = ImageIO.read(getClass().getResourceAsStream("/Player/walk03-left.png"));
+            walkLeft[3] = ImageIO.read(getClass().getResourceAsStream("/Player/walk02-left.png"));
+
+            jumpRight= ImageIO.read(getClass().getResourceAsStream("/Player/jump.png"));
+            jumpLeft = ImageIO.read(getClass().getResourceAsStream("/Player/jump-left.png"));
+            wantedToGoRight = ImageIO.read(getClass().getResourceAsStream("/Player/wanted-to-go-right.png"));
+            wantedToGoLeft = ImageIO.read(getClass().getResourceAsStream("/Player/wanted-to-go-left.png"));
+            standStillRight = ImageIO.read(getClass().getResourceAsStream("/Player/stand-still.png"));
+            standStillLeft = ImageIO.read(getClass().getResourceAsStream("/Player/stand-still-left.png"));
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void setDefaultValues() {
-        worldX = 2000;
+        worldX = 200;
         y = 5 * gp.tileHeight;
         velocityHorizontal = 0.0;
-        direction = "right";
+        velocityVertical = 0.0;
+        distanceJumped = 0;
+        jumping = false;
+        falling = false;
     }
 
     public void update() {
-        if(keyH.up || keyH.down || keyH.right || keyH.left) {
-            if (keyH.up) {
-                //y += velocity;
-            }
-            if (keyH.down) {
-                //y -= velocity;
-            }
+        //Horizontal
+        boolean isStandingOnSth = gp.cChecker.checkIfStandingOnSth(this);
+        if(keyH.right || keyH.left) {
             if (keyH.right) {
-                direction = "right";
-            }
-            if (keyH.left) {
-                direction = "left";
-            }
-
-
-
-            //If collisionOn is false, player can move
-//            if(collisionOn == false) {
-                if (keyH.up) {
-                    //y += velocity;
-                }
-                if (keyH.down) {
-                    //y -= velocity;
-                }
-                if (keyH.right) {
-                    direction = "right";
+                keyPressed = "right";
+                direction = true;
+                if(isStandingOnSth) {
                     if((velocityHorizontal + accelerationHorizontal) < maxHorizontalVelocity) {
                         velocityHorizontal += accelerationHorizontal;
                     }
                 }
-                if (keyH.left) {
-                    if((velocityHorizontal - accelerationHorizontal) > (-maxHorizontalVelocity)) {
+                else {
+                    if ((velocityHorizontal + accelerationHorizontal) < maxHorizontalVelocity) {
+                        velocityHorizontal += accelerationHorizontal/2;
+                    }
+                }
+            }
+            if (keyH.left) {
+                keyPressed = "left";
+                direction = false;
+                if(isStandingOnSth) {
+                    if ((velocityHorizontal - accelerationHorizontal) > (-maxHorizontalVelocity)) {
                         velocityHorizontal -= accelerationHorizontal;
                     }
                 }
-//            }
-
-            if(collisionOn) {
-                velocityHorizontal = 0;
-            }
-
-            spriteCounter++;
-            if(spriteCounter > gp.FPS/6) {
-                if(spriteNum == 10) {
-                    spriteNum = 1;
-                }
                 else {
-                    spriteNum++;
+                    if ((velocityHorizontal - accelerationHorizontal) > (-maxHorizontalVelocity)) {
+                        velocityHorizontal -= accelerationHorizontal/2;
+                    }
                 }
-                spriteCounter = 0;
             }
         }
         else {
+            keyPressed = "";
             if(velocityHorizontal > 0) {
-                velocityHorizontal -= (2 * accelerationHorizontal);
+                velocityHorizontal -= (accelerationHorizontal);
                 if(velocityHorizontal < 0) {
                     velocityHorizontal = 0;
                 }
             }
             else if(velocityHorizontal < 0) {
-                velocityHorizontal += (2 * accelerationHorizontal);
+                velocityHorizontal += (accelerationHorizontal);
                 if(velocityHorizontal > 0) {
                     velocityHorizontal = 0;
                 }
@@ -140,25 +139,98 @@ public class Player extends Entity{
         }
 
         //Check tile collision
-        collisionOn = false;
-        gp.cChecker.checkTile(this);
-        if(collisionOn) {
+        collisionHorizontalOn = false;
+        gp.cChecker.checkTileHorizontal(this);
+        if(collisionHorizontalOn) {
+            System.out.println("!!!!!!!!!!!!!!!!!!!!!!1");
             velocityHorizontal = 0.0;
         }
 
+        System.out.println(velocityHorizontal);
         worldX += (int) velocityHorizontal;
+
+
+
+        //Vertical
+        if(velocityVertical > maxVerticalVelocity * -1) {
+            velocityVertical += gravitationalAcceleration;
+        }
+
+        if(keyH.up && distanceJumped < 180 && !falling && (jumping || gp.cChecker.checkIfStandingOnSth(this))) {
+            jumping = true;
+            velocityVertical = maxVerticalVelocity;
+            distanceJumped += velocityVertical;
+        }
+        else {
+            distanceJumped = 0;
+            jumping = false;
+        }
+
+        collisionVerticalOn = false;
+        gp.cChecker.checkTileVertical(this);
+        if(collisionVerticalOn) {
+            velocityVertical = 0;
+        }
+
+        falling = false;
+        if(jumping == false && (int)velocityVertical != 0) {
+            falling = true;
+        }
+
+        y -= (int) velocityVertical;
     }
 
     public void draw(Graphics2D g2) {
         BufferedImage image = null;
-
-        switch (direction) {
-            case "right":
-                image = walkRight[spriteNum-1];
-                break;
-            case "left":
-                image = walkLeft[spriteNum-1];
-                break;
+        if(direction) {
+            if (!gp.cChecker.checkIfStandingOnSth(this)) {
+                image = jumpRight;
+                spriteNum = 1;
+            } else if ((int) velocityHorizontal == 0) {
+                image = standStillRight;
+                spriteNum = 1;
+            } else if (velocityHorizontal > 0) {
+                spriteCounter++;
+                if (spriteCounter > gp.FPS/velocityHorizontal) {
+                    if (spriteNum == 4) {
+                        spriteNum = 1;
+                    } else {
+                        spriteNum++;
+                    }
+                    spriteCounter = 0;
+                }
+                image = walkRight[spriteNum - 1];
+            } else if (velocityHorizontal < 0) {
+                image = wantedToGoRight;
+                spriteNum = 1;
+            }
+        }
+        else {
+            if(!gp.cChecker.checkIfStandingOnSth(this)) {
+                image = jumpLeft;
+                spriteNum = 1;
+            }
+            else if((int) velocityHorizontal == 0) {
+                image = standStillLeft;
+                spriteNum = 1;
+            }
+            else if(velocityHorizontal < 0) {
+                spriteCounter++;
+                if(spriteCounter > gp.FPS/velocityHorizontal * -1) {
+                    if(spriteNum == 4) {
+                        spriteNum = 1;
+                    }
+                    else {
+                        spriteNum++;
+                    }
+                    spriteCounter = 0;
+                }
+                image = walkLeft[spriteNum - 1];
+            }
+            else if(velocityHorizontal > 0) {
+                image = wantedToGoLeft;
+                spriteNum = 1;
+            }
         }
 
         g2.drawImage(image, screenX, y, gp.tileWidth, gp.tileHeight, null);

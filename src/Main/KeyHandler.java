@@ -5,7 +5,7 @@ import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener {
 
-    public boolean up, down, right, left;
+    public boolean up, right, left;
 
     @Override
     public void keyTyped(KeyEvent e) {}
@@ -15,9 +15,6 @@ public class KeyHandler implements KeyListener {
         int keyCode = e.getKeyCode();
         if(keyCode == KeyEvent.VK_UP) {
             up = true;
-        }
-        if(keyCode == KeyEvent.VK_DOWN) {
-            down = true;
         }
         if(keyCode == KeyEvent.VK_RIGHT) {
             right = true;
@@ -32,9 +29,6 @@ public class KeyHandler implements KeyListener {
         int keyCode = e.getKeyCode();
         if(keyCode == KeyEvent.VK_UP) {
             up = false;
-        }
-        if(keyCode == KeyEvent.VK_DOWN) {
-            down = false;
         }
         if(keyCode == KeyEvent.VK_RIGHT) {
             right = false;

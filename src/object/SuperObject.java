@@ -18,8 +18,8 @@ public class SuperObject {
 
         if(worldX + gp.tileWidth > gp.player.worldX - gp.player.screenX && worldX - gp.tileWidth < gp.player.worldX + gp.player.screenX) {
             spriteCounter++;
-            if(spriteCounter == gp.FPS/8) {
-                if (spriteNum != 8) {
+            if(spriteCounter == gp.FPS/4) {
+                if (spriteNum != 4) {
                     spriteNum++;
                 }
                 else {

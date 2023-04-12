@@ -7,11 +7,14 @@ public class Entity {
     public int worldX;
     public int y;
     public double velocityHorizontal;
-    BufferedImage[] walkRight = new BufferedImage[10];
-    BufferedImage[] walkLeft = new BufferedImage[10];
-    public String direction;
+    public double velocityVertical;
+    BufferedImage[] walkRight;
+    BufferedImage[] walkLeft;
+    public boolean direction = true;
     int spriteCounter = 0;
     int spriteNum = 1;
     public Rectangle solidArea;
-    public boolean collisionOn = false;
+    public boolean collisionHorizontalOn = false;
+    public boolean collisionVerticalOn = false;
+    public String keyPressed;
 }
