@@ -14,6 +14,7 @@ public class Sound {
         soundURL[0] = getClass().getResource("/sound/mario_08.wav");
         soundURL[1] = getClass().getResource("/sound/smb_coin.wav");
         soundURL[2] = getClass().getResource("/sound/smb_jump-small.wav");
+        soundURL[3] = getClass().getResource("/sound/smb_stage_clear.wav");
     }
 
     public void setFile(int i) {

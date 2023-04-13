@@ -1,6 +1,7 @@
 package Main;
 
 import object.OBJ_Coin;
+import object.OBJ_GoalPole;
 import object.OBJ_MysteryBlock;
 
 public class AssetSetter {
@@ -26,5 +27,9 @@ public class AssetSetter {
         gp.obj[3] = new OBJ_MysteryBlock();
         gp.obj[3].worldX = 54 * gp.tileWidth;
         gp.obj[3].y = 5 * gp.tileHeight;
+
+        gp.obj[4] = new OBJ_GoalPole();
+        gp.obj[4].worldX = 103 * gp.tileWidth;
+        gp.obj[4].y = 0;
     }
 }

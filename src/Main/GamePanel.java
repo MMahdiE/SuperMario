@@ -33,7 +33,10 @@ public class GamePanel extends JPanel implements Runnable{
     TileManager tileManager = new TileManager(this);
     public  CollisionChecker cChecker = new CollisionChecker(this);
     AssetSetter aSetter = new AssetSetter(this);
-    Sound sound = new Sound();
+    Sound music = new Sound();
+    Sound se = new Sound();
+    public UI ui = new UI(this);
+
 
     //Entity and object
     public Player player = new Player(this, key);
@@ -56,28 +59,64 @@ public class GamePanel extends JPanel implements Runnable{
         playMusic(0);
     }
 
+//    @Override
+//    public void run() {
+//        double drawInterval = 1000000000/FPS;
+//        double nextDrawTime = System.nanoTime() + drawInterval;
+//
+//        while(gameThread != null) {
+//            update();
+//
+//            repaint();
+//
+//            try {
+//                double remainingTime = nextDrawTime - System.nanoTime();
+//                remainingTime = remainingTime / 1000000;
+//
+//                if(remainingTime < 0) {
+//                    remainingTime = 0;
+//                }
+//                Thread.sleep((long) remainingTime);
+//
+//                nextDrawTime += drawInterval;
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//    }
+
     @Override
     public void run() {
-        double drawInterval = 1000000000/FPS;
-        double nextDrawTime = System.nanoTime() + drawInterval;
+        //delta/accumulator method
+        double drawInterval = 1000000000 / FPS;
+        double delta = 0;
+        long lastTime = System.nanoTime();
+        long currentTime;
+        long timer = 0;
+        long drawCount = 0;
 
-        while(gameThread != null) {
-            update();
+        while (gameThread != null) {
+            currentTime = System.nanoTime();
 
-            repaint();
+            delta += (currentTime - lastTime) / drawInterval;
 
-            try {
-                double remainingTime = nextDrawTime - System.nanoTime();
-                remainingTime = remainingTime / 1000000;
+            timer += currentTime - lastTime;
 
-                if(remainingTime < 0) {
-                    remainingTime = 0;
-                }
-                Thread.sleep((long) remainingTime);
+            lastTime = currentTime;
 
-                nextDrawTime += drawInterval;
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+            if (delta >= 1) {
+                update();
+                repaint();
+
+                delta--;
+                drawCount++;
+            }
+
+            //printing fps in terminal
+            if(timer >= 1000000000) {
+                System.out.println("FPS:" + drawCount);
+                drawCount = 0;
+                timer = 0;
             }
         }
     }
@@ -106,24 +145,27 @@ public class GamePanel extends JPanel implements Runnable{
         //player
         player.draw(g2);
 
+        //UI
+        ui.draw(g2);
+
         g2.dispose();
     }
 
     public void playMusic(int i) {
 
-        sound.setFile(i);
-        sound.play();
-        sound.loop();
+        music.setFile(i);
+        music.play();
+        music.loop();
     }
 
     public void stopMusic() {
 
-        sound.stop();
+        music.stop();
     }
 
     public void playSE(int i) {
 
-        sound.setFile(i);
-        sound.play();
+        se.setFile(i);
+        se.play();
     }
 }

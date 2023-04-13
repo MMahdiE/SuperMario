@@ -27,7 +27,8 @@ public class Player extends Entity{
     BufferedImage wantedToGoLeft;
     BufferedImage standStillRight;
     BufferedImage standStillLeft;
-    int coins = 0;
+    public int coins = 0;
+    public int lives = 999;
 
 
     public Player(GamePanel gp, KeyHandler keyH) {
@@ -84,7 +85,7 @@ public class Player extends Entity{
     }
 
     public void setDefaultValues() {
-        worldX = 200;
+        worldX = 2000;
         y = 5 * gp.tileHeight;
         velocityHorizontal = 0.0;
         velocityVertical = 0.0;
@@ -254,6 +255,11 @@ public class Player extends Entity{
                     gp.playSE(1);
                     coins++;
                     gp.obj[index] = null;
+                    break;
+                case "Goal Pole":
+                    gp.ui.gameFinished = true;
+                    gp.stopMusic();
+                    gp.playSE(3);
                     break;
             }
         }
