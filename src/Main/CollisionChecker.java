@@ -110,4 +110,49 @@ public class CollisionChecker {
 
         return  itIs;
     }
+
+    public int checkObject(Entity entity, boolean player) {
+        int index = 999;
+
+        for(int i = 0; i < gp.obj.length; i++) {
+            if(gp.obj[i] != null) {
+
+                entity.solidArea.x += entity.worldX;
+                entity.solidArea.y += entity.y;
+
+                gp.obj[i].solidArea.x += gp.obj[i].worldX;
+                gp.obj[i].solidArea.y += gp.obj[i].y;
+
+                if((int) entity.velocityHorizontal != 0) {
+                    entity.solidArea.x += (int) entity.velocityHorizontal;
+                    if(entity.solidArea.intersects(gp.obj[i].solidArea)) {
+                        if(gp.obj[i].collision) {
+                            entity.collisionHorizontalOn = true;
+                        }
+                        if(player) {
+                            index = i;
+                        }
+                    }
+                }
+                if((int) entity.velocityVertical != 0) {
+                    entity.solidArea.y -= (int) entity.velocityVertical;
+                    if(entity.solidArea.intersects(gp.obj[i].solidArea)) {
+                        if(gp.obj[i].collision) {
+                            entity.collisionVerticalOn = true;
+                        }
+                        if(player) {
+                            index = i;
+                        }
+                    }
+                }
+
+                entity.solidArea.x = entity.solidAreaDefaultX;
+                entity.solidArea.y = entity.solidAreaDefaultY;
+                gp.obj[i].solidArea.x = gp.obj[i].solidAreaDefaultX;
+                gp.obj[i].solidArea.y = gp.obj[i].solidAreaDefaultY;
+            }
+        }
+
+        return index;
+    }
 }

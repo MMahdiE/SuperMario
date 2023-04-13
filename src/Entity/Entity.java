@@ -14,6 +14,8 @@ public class Entity {
     int spriteCounter = 0;
     int spriteNum = 1;
     public Rectangle solidArea;
+    public int solidAreaDefaultX;
+    public int solidAreaDefaultY;
     public boolean collisionHorizontalOn = false;
     public boolean collisionVerticalOn = false;
     public String keyPressed;

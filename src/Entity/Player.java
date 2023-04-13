@@ -27,6 +27,7 @@ public class Player extends Entity{
     BufferedImage wantedToGoLeft;
     BufferedImage standStillRight;
     BufferedImage standStillLeft;
+    int coins = 0;
 
 
     public Player(GamePanel gp, KeyHandler keyH) {
@@ -47,6 +48,9 @@ public class Player extends Entity{
         solidArea.width = gp.tileWidth - (2*solidArea.x);
         //Why do I need the - 1 ???????????????????????????????????????????????????????????????????????
         solidArea.height = gp.tileHeight - (solidArea.y) - 1;
+
+        solidAreaDefaultX = solidArea.x;
+        solidAreaDefaultY = solidArea.y;
 
         setDefaultValues();
         getPlayerImage();
@@ -142,11 +146,9 @@ public class Player extends Entity{
         collisionHorizontalOn = false;
         gp.cChecker.checkTileHorizontal(this);
         if(collisionHorizontalOn) {
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!1");
             velocityHorizontal = 0.0;
         }
 
-        System.out.println(velocityHorizontal);
         worldX += (int) velocityHorizontal;
 
 
@@ -157,6 +159,10 @@ public class Player extends Entity{
         }
 
         if(keyH.up && distanceJumped < 180 && !falling && (jumping || gp.cChecker.checkIfStandingOnSth(this))) {
+            if(jumping == false) {
+                gp.playSE(2);
+            }
+
             jumping = true;
             velocityVertical = maxVerticalVelocity;
             distanceJumped += velocityVertical;
@@ -169,7 +175,7 @@ public class Player extends Entity{
         collisionVerticalOn = false;
         gp.cChecker.checkTileVertical(this);
         if(collisionVerticalOn) {
-            velocityVertical = 0;
+            velocityVertical = 0.0;
         }
 
         falling = false;
@@ -178,6 +184,11 @@ public class Player extends Entity{
         }
 
         y -= (int) velocityVertical;
+
+
+
+        int objIndex = gp.cChecker.checkObject(this, true);
+        pickUpObject(objIndex);
     }
 
     public void draw(Graphics2D g2) {
@@ -234,5 +245,17 @@ public class Player extends Entity{
         }
 
         g2.drawImage(image, screenX, y, gp.tileWidth, gp.tileHeight, null);
+    }
+
+    public void pickUpObject(int index) {
+        if(index != 999) {
+            switch (gp.obj[index].name) {
+                case "Coin":
+                    gp.playSE(1);
+                    coins++;
+                    gp.obj[index] = null;
+                    break;
+            }
+        }
     }
 }
