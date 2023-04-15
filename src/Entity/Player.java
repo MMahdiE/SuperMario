@@ -2,6 +2,7 @@ package Entity;
 
 import Main.GamePanel;
 import Main.KeyHandler;
+import Main.UtilityTool;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -58,30 +59,40 @@ public class Player extends Entity{
     }
 
     public void getPlayerImage() {
-        try{
-            walkRight = new BufferedImage[4];
-            walkLeft = new BufferedImage[4];
 
-            walkRight[0] = ImageIO.read(getClass().getResourceAsStream("/Player/walk01.png"));
-            walkRight[1] = ImageIO.read(getClass().getResourceAsStream("/Player/walk02.png"));
-            walkRight[2] = ImageIO.read(getClass().getResourceAsStream("/Player/walk03.png"));
-            walkRight[3] = ImageIO.read(getClass().getResourceAsStream("/Player/walk02.png"));
+        walkRight = new BufferedImage[4];
+        walkLeft = new BufferedImage[4];
 
-            walkLeft[0] = ImageIO.read(getClass().getResourceAsStream("/Player/walk01-left.png"));
-            walkLeft[1] = ImageIO.read(getClass().getResourceAsStream("/Player/walk02-left.png"));
-            walkLeft[2] = ImageIO.read(getClass().getResourceAsStream("/Player/walk03-left.png"));
-            walkLeft[3] = ImageIO.read(getClass().getResourceAsStream("/Player/walk02-left.png"));
 
-            jumpRight= ImageIO.read(getClass().getResourceAsStream("/Player/jump.png"));
-            jumpLeft = ImageIO.read(getClass().getResourceAsStream("/Player/jump-left.png"));
-            wantedToGoRight = ImageIO.read(getClass().getResourceAsStream("/Player/wanted-to-go-right.png"));
-            wantedToGoLeft = ImageIO.read(getClass().getResourceAsStream("/Player/wanted-to-go-left.png"));
-            standStillRight = ImageIO.read(getClass().getResourceAsStream("/Player/stand-still.png"));
-            standStillLeft = ImageIO.read(getClass().getResourceAsStream("/Player/stand-still-left.png"));
+        walkRight[0] = setup("walk01");
+        walkRight[1] = setup("walk02");
+        walkRight[2] = setup("walk03");
+        walkRight[3] = setup("walk02");
+        walkLeft[0] = setup("walk01-left");
+        walkLeft[1] = setup("walk02-left");
+        walkLeft[2] = setup("walk03-left");
+        walkLeft[3] = setup("walk02-left");
+        jumpRight  = setup("jump");
+        jumpLeft = setup("jump-left");
+        wantedToGoRight = setup("wanted-to-go-right");
+        wantedToGoLeft = setup("wanted-to-go-left");
+        standStillRight = setup("stand-still");
+        standStillLeft = setup("stand-still-left");
+    }
 
+    public BufferedImage setup(String fileName) {
+
+        UtilityTool uTool = new UtilityTool();
+        BufferedImage image = null;
+
+        try {
+            image = ImageIO.read(getClass().getResourceAsStream("/Player/" + fileName + ".png"));
+            image = uTool.scaleImage(image, gp.tileWidth, gp.tileHeight);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        return image;
     }
 
     public void setDefaultValues() {
@@ -245,7 +256,7 @@ public class Player extends Entity{
             }
         }
 
-        g2.drawImage(image, screenX, y, gp.tileWidth, gp.tileHeight, null);
+        g2.drawImage(image, screenX, y, null);
     }
 
     public void pickUpObject(int index) {

@@ -9,14 +9,24 @@ import java.io.IOException;
 
 public class OBJ_Coin extends SuperObject{
 
-    public OBJ_Coin() {
+    GamePanel gp;
+
+    public OBJ_Coin(GamePanel gp) {
+
+        this.gp = gp;
+
         name = "Coin";
         image = new BufferedImage[4];
         try {
             image[0] = ImageIO.read(getClass().getResourceAsStream("/objects/coin01.png"));
+            image[0] = uTool.scaleImage(image[0], gp.tileWidth, gp.tileHeight);
             image[1] = ImageIO.read(getClass().getResourceAsStream("/objects/coin02.png"));
+            image[1] = uTool.scaleImage(image[1], gp.tileWidth, gp.tileHeight);
             image[2] = ImageIO.read(getClass().getResourceAsStream("/objects/coin03.png"));
+            image[2] = uTool.scaleImage(image[2], gp.tileWidth, gp.tileHeight);
             image[3] = ImageIO.read(getClass().getResourceAsStream("/objects/coin04.png"));
+            image[3] = uTool.scaleImage(image[3], gp.tileWidth, gp.tileHeight);
+
         }catch (IOException e) {
             e.printStackTrace();
         }
@@ -36,7 +46,7 @@ public class OBJ_Coin extends SuperObject{
                 }
                 spriteCounter = 0;
             }
-            g2.drawImage(image[spriteNum - 1], screenX, y, gp.tileWidth, gp.tileHeight, null);
+            g2.drawImage(image[spriteNum - 1], screenX, y, null);
         }
     }
 }

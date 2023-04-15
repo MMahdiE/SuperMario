@@ -9,12 +9,19 @@ import java.io.IOException;
 
 public class OBJ_GoalPole extends SuperObject{
 
-    public OBJ_GoalPole() {
+    GamePanel gp;
+
+    public OBJ_GoalPole(GamePanel gp) {
+
+        this.gp = gp;
+
         name = "Goal Pole";
         image = new BufferedImage[2];
         try {
             image[0] = ImageIO.read(getClass().getResourceAsStream("/objects/goal-pole01.png"));
+            image[0] = uTool.scaleImage(image[0], gp.tileWidth, gp.tileHeight);
             image[1] = ImageIO.read(getClass().getResourceAsStream("/objects/goal-pole02.png"));
+            image[1] = uTool.scaleImage(image[0], gp.tileWidth, gp.tileHeight);
         }catch (IOException e) {
             e.printStackTrace();
         }
@@ -31,15 +38,15 @@ public class OBJ_GoalPole extends SuperObject{
         if(worldX + gp.tileWidth > gp.player.worldX - gp.player.screenX && worldX - gp.tileWidth < gp.player.worldX + gp.player.screenX) {
 
             g2.drawImage(image[0], screenX, y, gp.tileWidth, gp.tileHeight, null);
-            g2.drawImage(image[1], screenX, y + (gp.tileHeight*1), gp.tileWidth, gp.tileHeight, null);
-            g2.drawImage(image[1], screenX, y + (gp.tileHeight*2), gp.tileWidth, gp.tileHeight, null);
-            g2.drawImage(image[1], screenX, y + (gp.tileHeight*3), gp.tileWidth, gp.tileHeight, null);
-            g2.drawImage(image[1], screenX, y + (gp.tileHeight*4), gp.tileWidth, gp.tileHeight, null);
-            g2.drawImage(image[1], screenX, y + (gp.tileHeight*5), gp.tileWidth, gp.tileHeight, null);
-            g2.drawImage(image[1], screenX, y + (gp.tileHeight*6), gp.tileWidth, gp.tileHeight, null);
-            g2.drawImage(image[1], screenX, y + (gp.tileHeight*7), gp.tileWidth, gp.tileHeight, null);
-            g2.drawImage(image[1], screenX, y + (gp.tileHeight*8), gp.tileWidth, gp.tileHeight, null);
-            g2.drawImage(image[1], screenX, y + (gp.tileHeight*9), gp.tileWidth, gp.tileHeight, null);
+            g2.drawImage(image[1], screenX, y + (gp.tileHeight*1), null);
+            g2.drawImage(image[1], screenX, y + (gp.tileHeight*2), null);
+            g2.drawImage(image[1], screenX, y + (gp.tileHeight*3), null);
+            g2.drawImage(image[1], screenX, y + (gp.tileHeight*4), null);
+            g2.drawImage(image[1], screenX, y + (gp.tileHeight*5), null);
+            g2.drawImage(image[1], screenX, y + (gp.tileHeight*6), null);
+            g2.drawImage(image[1], screenX, y + (gp.tileHeight*7), null);
+            g2.drawImage(image[1], screenX, y + (gp.tileHeight*8), null);
+            g2.drawImage(image[1], screenX, y + (gp.tileHeight*9), null);
 
         }
     }

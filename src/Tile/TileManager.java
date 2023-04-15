@@ -1,6 +1,7 @@
 package Tile;
 
 import Main.GamePanel;
+import Main.UtilityTool;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -54,43 +55,28 @@ public class TileManager {
     }
 
     void getTileImage() {
-        try{
-            tile[0] = new Tile();
-            tile[0].image = ImageIO.read(getClass().getResourceAsStream("/tiles/blue-sky.png"));
 
-            tile[1] = new Tile();
-            tile[1].image = ImageIO.read(getClass().getResourceAsStream("/tiles/ground-brown.png"));
-            tile[1].collision = true;
+        setup(0, "blue-sky", false);
+        setup(1, "ground-brown", true);
+        setup(2, "brick-brown", true);
+        setup(3, "pipe01", true);
+        setup(4, "pipe02", true);
+        setup(5, "pipe03", true);
+        setup(6, "pipe04", true);
+        setup(7, "brick-brown-top-white", true);
+        setup(8, "goal-pole03", true);
+    }
 
-            tile[2] = new Tile();
-            tile[2].image = ImageIO.read(getClass().getResourceAsStream("/tiles/brick-brown.png"));
-            tile[2].collision = true;
+    public void setup(int index, String imageName, boolean collision) {
 
-            tile[3] = new Tile();
-            tile[3].image = ImageIO.read(getClass().getResourceAsStream("/tiles/pipe01.png"));
-            tile[3].collision = true;
+        UtilityTool uTool = new UtilityTool();
 
-            tile[4] = new Tile();
-            tile[4].image = ImageIO.read(getClass().getResourceAsStream("/tiles/pipe02.png"));
-            tile[4].collision = true;
-
-            tile[5] = new Tile();
-            tile[5].image = ImageIO.read(getClass().getResourceAsStream("/tiles/pipe03.png"));
-            tile[5].collision = true;
-
-            tile[6] = new Tile();
-            tile[6].image = ImageIO.read(getClass().getResourceAsStream("/tiles/pipe04.png"));
-            tile[6].collision = true;
-
-            tile[7] = new Tile();
-            tile[7].image = ImageIO.read(getClass().getResourceAsStream("/tiles/brick-brown-top-white.png"));
-            tile[7].collision = true;
-
-            tile[8] = new Tile();
-            tile[8].image = ImageIO.read(getClass().getResourceAsStream("/tiles/goal-pole03.png"));
-            tile[8].collision = true;
-
-        } catch (IOException e)  {
+        try {
+            tile[index] = new Tile();
+            tile[index].image = ImageIO.read(getClass().getResourceAsStream("/tiles/" + imageName + ".png"));
+            tile[index].image = uTool.scaleImage(tile[index].image, gp.tileWidth, gp.tileHeight);
+            tile[index].collision = collision;
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -107,7 +93,7 @@ public class TileManager {
                 int screenX = worldX - gp.player.worldX + gp.player.screenX;
 
                 if(worldX + gp.tileWidth > gp.player.worldX - gp.player.screenX && worldX - gp.tileWidth < gp.player.worldX + gp.player.screenX) {
-                    g2.drawImage(tile[mapTileNum[worldCol][row]].image, screenX, y, gp.tileWidth, gp.tileHeight, null);
+                    g2.drawImage(tile[mapTileNum[worldCol][row]].image, screenX, y, null);
                 }
                 worldCol++;
             }

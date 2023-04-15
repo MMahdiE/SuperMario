@@ -6,6 +6,7 @@ import java.awt.event.KeyListener;
 public class KeyHandler implements KeyListener {
 
     public boolean up, right, left;
+    boolean checkDrawTime = false;
 
     @Override
     public void keyTyped(KeyEvent e) {}
@@ -21,6 +22,16 @@ public class KeyHandler implements KeyListener {
         }
         if(keyCode == KeyEvent.VK_LEFT) {
             left = true;
+        }
+
+        //debug
+        if(keyCode == KeyEvent.VK_T) {
+            if(checkDrawTime == false) {
+                checkDrawTime = true;
+            }
+            else if(checkDrawTime == true) {
+                checkDrawTime = false;
+            }
         }
     }
 

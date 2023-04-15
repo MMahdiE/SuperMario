@@ -29,7 +29,7 @@ public class GamePanel extends JPanel implements Runnable{
 
     //System
     Thread gameThread;
-    KeyHandler key = new KeyHandler();
+    KeyHandler keyH = new KeyHandler();
     TileManager tileManager = new TileManager(this);
     public  CollisionChecker cChecker = new CollisionChecker(this);
     AssetSetter aSetter = new AssetSetter(this);
@@ -39,7 +39,7 @@ public class GamePanel extends JPanel implements Runnable{
 
 
     //Entity and object
-    public Player player = new Player(this, key);
+    public Player player = new Player(this, keyH);
     public SuperObject obj[] = new SuperObject[10];
 
 
@@ -48,7 +48,7 @@ public class GamePanel extends JPanel implements Runnable{
         this.setBackground(Color.WHITE);
         this.setDoubleBuffered(true);
 
-        this.addKeyListener(key);
+        this.addKeyListener(keyH);
         this.setFocusable(true);
         gameThread = new Thread(this);
     }
@@ -131,6 +131,12 @@ public class GamePanel extends JPanel implements Runnable{
 
         Graphics2D g2 = (Graphics2D) g;
 
+        //debug
+        long drawStart = 0;
+        if(keyH.checkDrawTime) {
+            drawStart = System.nanoTime();
+        }
+
         //It's important what you draw first!!!!!
         //tile
         tileManager.draw(g2);
@@ -147,6 +153,15 @@ public class GamePanel extends JPanel implements Runnable{
 
         //UI
         ui.draw(g2);
+
+        //debug
+        if(keyH.checkDrawTime) {
+            long drawEnd = System.nanoTime();
+            long passed = drawEnd - drawStart;
+            g2.setColor(Color.WHITE);
+            g2.drawString("DrawTime: " + passed, 10, 400);
+            System.out.println("DrawTime: " + passed);
+        }
 
         g2.dispose();
     }
