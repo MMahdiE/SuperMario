@@ -93,7 +93,33 @@ public class TileManager {
                 int screenX = worldX - gp.player.worldX + gp.player.screenX;
 
                 if(worldX + gp.tileWidth > gp.player.worldX - gp.player.screenX && worldX - gp.tileWidth < gp.player.worldX + gp.player.screenX) {
-                    g2.drawImage(tile[mapTileNum[worldCol][row]].image, screenX, y, null);
+                    if(tile[mapTileNum[worldCol][row]].collision == false) {
+                        g2.drawImage(tile[mapTileNum[worldCol][row]].image, screenX, y, null);
+                    }
+                }
+                worldCol++;
+            }
+            worldCol = 0;
+            row++;
+            y += gp.tileHeight;
+        }
+    }
+
+    public void drawWithCollision(Graphics2D g2) {
+        int worldCol = 0;
+        int row = 0;
+        int y = 0;
+
+        while(row < gp.maxScreenRow) {
+            while(worldCol < gp.maxWorldCol) {
+
+                int worldX = worldCol * gp.tileWidth;
+                int screenX = worldX - gp.player.worldX + gp.player.screenX;
+
+                if(worldX + gp.tileWidth > gp.player.worldX - gp.player.screenX && worldX - gp.tileWidth < gp.player.worldX + gp.player.screenX) {
+                    if(tile[mapTileNum[worldCol][row]].collision == true) {
+                        g2.drawImage(tile[mapTileNum[worldCol][row]].image, screenX, y, null);
+                    }
                 }
                 worldCol++;
             }

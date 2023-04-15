@@ -2,44 +2,46 @@ package Entity;
 
 import Main.GamePanel;
 import Main.KeyHandler;
-import Main.UtilityTool;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 public class Player extends Entity{
 
-    GamePanel gp;
     KeyHandler keyH;
 
     public final int screenX;
     double accelerationHorizontal;
     int maxHorizontalVelocity;
-    double gravitationalAcceleration;
-    int maxVerticalVelocity;
     boolean jumping;
     boolean falling;
     int distanceJumped;
+    BufferedImage walkRight[];
+    BufferedImage walkLeft[];
     BufferedImage jumpRight;
     BufferedImage jumpLeft;
     BufferedImage wantedToGoRight;
     BufferedImage wantedToGoLeft;
     BufferedImage standStillRight;
     BufferedImage standStillLeft;
+    int objectIndexHorizontal;
+    int objectIndexVertical;
+    int entityIndexHorizontal;
+    int entityIndexVertical;
     public int coins = 0;
     public int lives = 999;
 
 
     public Player(GamePanel gp, KeyHandler keyH) {
-        this.gp = gp;
+
+        super(gp);
+
         this.keyH = keyH;
+
+        name = "Player";
 
         accelerationHorizontal = gp.FPS/1200.0;
         maxHorizontalVelocity = gp.FPS/12;
-        gravitationalAcceleration = gp.FPS/480.0 * -1;
-        maxVerticalVelocity = gp.FPS/20;
 
 
         screenX = (gp.screenWidth - gp.tileWidth) / 2;
@@ -55,44 +57,29 @@ public class Player extends Entity{
         solidAreaDefaultY = solidArea.y;
 
         setDefaultValues();
-        getPlayerImage();
+        getImage();
     }
 
-    public void getPlayerImage() {
+    public void getImage() {
 
         walkRight = new BufferedImage[4];
         walkLeft = new BufferedImage[4];
 
 
-        walkRight[0] = setup("walk01");
-        walkRight[1] = setup("walk02");
-        walkRight[2] = setup("walk03");
-        walkRight[3] = setup("walk02");
-        walkLeft[0] = setup("walk01-left");
-        walkLeft[1] = setup("walk02-left");
-        walkLeft[2] = setup("walk03-left");
-        walkLeft[3] = setup("walk02-left");
-        jumpRight  = setup("jump");
-        jumpLeft = setup("jump-left");
-        wantedToGoRight = setup("wanted-to-go-right");
-        wantedToGoLeft = setup("wanted-to-go-left");
-        standStillRight = setup("stand-still");
-        standStillLeft = setup("stand-still-left");
-    }
-
-    public BufferedImage setup(String fileName) {
-
-        UtilityTool uTool = new UtilityTool();
-        BufferedImage image = null;
-
-        try {
-            image = ImageIO.read(getClass().getResourceAsStream("/Player/" + fileName + ".png"));
-            image = uTool.scaleImage(image, gp.tileWidth, gp.tileHeight);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return image;
+        walkRight[0] = setup("/Player/walk01");
+        walkRight[1] = setup("/Player/walk02");
+        walkRight[2] = setup("/Player/walk03");
+        walkRight[3] = setup("/Player/walk02");
+        walkLeft[0] = setup("/Player/walk01-left");
+        walkLeft[1] = setup("/Player/walk02-left");
+        walkLeft[2] = setup("/Player/walk03-left");
+        walkLeft[3] = setup("/Player/walk02-left");
+        jumpRight  = setup("/Player/jump");
+        jumpLeft = setup("/Player/jump-left");
+        wantedToGoRight = setup("/Player/wanted-to-go-right");
+        wantedToGoLeft = setup("/Player/wanted-to-go-left");
+        standStillRight = setup("/Player/stand-still");
+        standStillLeft = setup("/Player/stand-still-left");
     }
 
     public void setDefaultValues() {
@@ -105,6 +92,7 @@ public class Player extends Entity{
         falling = false;
     }
 
+    public void setAction(){}
     public void update() {
         //Horizontal
         boolean isStandingOnSth = gp.cChecker.checkIfStandingOnSth(this);
@@ -157,6 +145,8 @@ public class Player extends Entity{
         //Check tile collision
         collisionHorizontalOn = false;
         gp.cChecker.checkTileHorizontal(this);
+        objectIndexHorizontal = gp.cChecker.checkObjectHorizontal(this, true);
+        entityIndexHorizontal = gp.cChecker.checkEntityHorizontal(this, gp.enemies);
         if(collisionHorizontalOn) {
             velocityHorizontal = 0.0;
         }
@@ -167,7 +157,7 @@ public class Player extends Entity{
 
         //Vertical
         if(velocityVertical > maxVerticalVelocity * -1) {
-            velocityVertical += gravitationalAcceleration;
+            velocityVertical += gp.gravitationalAcceleration;
         }
 
         if(keyH.up && distanceJumped < 180 && !falling && (jumping || gp.cChecker.checkIfStandingOnSth(this))) {
@@ -186,6 +176,8 @@ public class Player extends Entity{
 
         collisionVerticalOn = false;
         gp.cChecker.checkTileVertical(this);
+        objectIndexVertical = gp.cChecker.checkObjectVertical(this, true);
+        entityIndexVertical = gp.cChecker.checkEntityVertical(this, gp.enemies);
         if(collisionVerticalOn) {
             velocityVertical = 0.0;
         }
@@ -197,10 +189,10 @@ public class Player extends Entity{
 
         y -= (int) velocityVertical;
 
-
-
-        int objIndex = gp.cChecker.checkObject(this, true);
-        pickUpObject(objIndex);
+        pickUpObject(objectIndexHorizontal);
+        pickUpObject(objectIndexVertical);
+        entityInteraction(entityIndexHorizontal);
+        entityInteraction(entityIndexVertical);
     }
 
     public void draw(Graphics2D g2) {
@@ -271,6 +263,19 @@ public class Player extends Entity{
                     gp.ui.gameFinished = true;
                     gp.stopMusic();
                     gp.playSE(3);
+                    break;
+            }
+        }
+    }
+
+    public void entityInteraction(int index) {
+        if(index != 999) {
+            switch (gp.enemies[index].name) {
+                case "Piranha Plant":
+                    System.out.println("DEAD!");
+                    break;
+                case "Goomba":
+                    System.out.println("DEAD!");
                     break;
             }
         }

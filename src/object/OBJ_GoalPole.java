@@ -21,7 +21,7 @@ public class OBJ_GoalPole extends SuperObject{
             image[0] = ImageIO.read(getClass().getResourceAsStream("/objects/goal-pole01.png"));
             image[0] = uTool.scaleImage(image[0], gp.tileWidth, gp.tileHeight);
             image[1] = ImageIO.read(getClass().getResourceAsStream("/objects/goal-pole02.png"));
-            image[1] = uTool.scaleImage(image[0], gp.tileWidth, gp.tileHeight);
+            image[1] = uTool.scaleImage(image[1], gp.tileWidth, gp.tileHeight);
         }catch (IOException e) {
             e.printStackTrace();
         }

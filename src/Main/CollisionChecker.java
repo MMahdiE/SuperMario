@@ -24,7 +24,7 @@ public class CollisionChecker {
 
         int tileNum1, tileNum2;
 
-        if(gp.player.velocityHorizontal < 0) {
+        if(entity.velocityHorizontal < 0) {
             entityLeftWorldX += (int) entity.velocityHorizontal;
             if(entityLeftWorldX < 0) {
                 entity.collisionHorizontalOn = true;
@@ -38,7 +38,7 @@ public class CollisionChecker {
                 }
             }
         }
-        else if(gp.player.velocityHorizontal > 0) {
+        else if(entity.velocityHorizontal > 0) {
             entityRightWorldX += (int) entity.velocityHorizontal;
             if(entityRightWorldX >= gp.worldWidth) {
                 entity.collisionHorizontalOn = true;
@@ -69,7 +69,7 @@ public class CollisionChecker {
         int tileNum1, tileNum2;
 
         //going down
-        if(gp.player.velocityVertical < 0) {
+        if(entity.velocityVertical < 0) {
             entityBottomRow = (entityBottomY - (int) entity.velocityVertical) / gp.tileHeight;
             tileNum1 = gp.tileManager.mapTileNum[entityLeftWorldCol][entityBottomRow];
                 tileNum2 = gp.tileManager.mapTileNum[entityRightWorldCol][entityBottomRow];
@@ -78,7 +78,7 @@ public class CollisionChecker {
                 }
         }
         //going up
-        else if(gp.player.velocityVertical > 0) {
+        else if(entity.velocityVertical > 0) {
             entityTopRow = (entityTopY - (int) entity.velocityVertical) / gp.tileHeight;
                 tileNum1 = gp.tileManager.mapTileNum[entityLeftWorldCol][entityTopRow];
                 tileNum2 = gp.tileManager.mapTileNum[entityRightWorldCol][entityTopRow];
@@ -111,7 +111,7 @@ public class CollisionChecker {
         return  itIs;
     }
 
-    public int checkObject(Entity entity, boolean player) {
+    public int checkObjectHorizontal(Entity entity, boolean player) {
         int index = 999;
 
         for(int i = 0; i < gp.obj.length; i++) {
@@ -134,6 +134,29 @@ public class CollisionChecker {
                         }
                     }
                 }
+
+                entity.solidArea.x = entity.solidAreaDefaultX;
+                entity.solidArea.y = entity.solidAreaDefaultY;
+                gp.obj[i].solidArea.x = gp.obj[i].solidAreaDefaultX;
+                gp.obj[i].solidArea.y = gp.obj[i].solidAreaDefaultY;
+            }
+        }
+
+        return index;
+    }
+
+    public int checkObjectVertical(Entity entity, boolean player) {
+        int index = 999;
+
+        for(int i = 0; i < gp.obj.length; i++) {
+            if(gp.obj[i] != null) {
+
+                entity.solidArea.x += entity.worldX;
+                entity.solidArea.y += entity.y;
+
+                gp.obj[i].solidArea.x += gp.obj[i].worldX;
+                gp.obj[i].solidArea.y += gp.obj[i].y;
+
                 if((int) entity.velocityVertical != 0) {
                     entity.solidArea.y -= (int) entity.velocityVertical;
                     if(entity.solidArea.intersects(gp.obj[i].solidArea)) {
@@ -150,6 +173,70 @@ public class CollisionChecker {
                 entity.solidArea.y = entity.solidAreaDefaultY;
                 gp.obj[i].solidArea.x = gp.obj[i].solidAreaDefaultX;
                 gp.obj[i].solidArea.y = gp.obj[i].solidAreaDefaultY;
+            }
+        }
+
+        return index;
+    }
+
+    public int checkEntityHorizontal(Entity entity, Entity[] target) {
+        int index = 999;
+
+        for(int i = 0; i < target.length; i++) {
+            if(target[i] != null) {
+
+                entity.solidArea.x += entity.worldX;
+                entity.solidArea.y += entity.y;
+
+                target[i].solidArea.x += target[i].worldX;
+                target[i].solidArea.y += target[i].y;
+
+                if((int) entity.velocityHorizontal != 0) {
+                    entity.solidArea.x += (int) entity.velocityHorizontal;
+                    if(entity.solidArea.intersects(target[i].solidArea)) {
+                        index = i;
+                        if(target[i].collision) {
+                            entity.collisionHorizontalOn = true;
+                        }
+                    }
+                }
+
+                entity.solidArea.x = entity.solidAreaDefaultX;
+                entity.solidArea.y = entity.solidAreaDefaultY;
+                target[i].solidArea.x = target[i].solidAreaDefaultX;
+                target[i].solidArea.y = target[i].solidAreaDefaultY;
+            }
+        }
+
+        return index;
+    }
+
+    public int checkEntityVertical(Entity entity, Entity[] target) {
+        int index = 999;
+
+        for(int i = 0; i < target.length; i++) {
+            if(target[i] != null) {
+
+                entity.solidArea.x += entity.worldX;
+                entity.solidArea.y += entity.y;
+
+                target[i].solidArea.x += target[i].worldX;
+                target[i].solidArea.y += target[i].y;
+
+                if((int) entity.velocityVertical != 0) {
+                    entity.solidArea.y -= (int) entity.velocityVertical;
+                    if(entity.solidArea.intersects(target[i].solidArea)) {
+                        index = i;
+                        if(target[i].collision) {
+                            entity.collisionVerticalOn = true;
+                        }
+                    }
+                }
+
+                entity.solidArea.x = entity.solidAreaDefaultX;
+                entity.solidArea.y = entity.solidAreaDefaultY;
+                target[i].solidArea.x = target[i].solidAreaDefaultX;
+                target[i].solidArea.y = target[i].solidAreaDefaultY;
             }
         }
 

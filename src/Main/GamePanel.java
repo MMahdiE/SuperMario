@@ -1,6 +1,6 @@
 package Main;
 
-import Entity.Player;
+import Entity.*;
 import Tile.TileManager;
 import object.SuperObject;
 
@@ -26,11 +26,13 @@ public class GamePanel extends JPanel implements Runnable{
     public final int maxWorldCol = 104;
     public final int worldWidth = tileWidth * maxWorldCol;
     public final int FPS = 60;
+    public double gravitationalAcceleration = FPS/480.0 * -1;
+
 
     //System
     Thread gameThread;
-    KeyHandler keyH = new KeyHandler();
-    TileManager tileManager = new TileManager(this);
+    KeyHandler keyH = new KeyHandler(this);
+    public TileManager tileManager = new TileManager(this);
     public  CollisionChecker cChecker = new CollisionChecker(this);
     AssetSetter aSetter = new AssetSetter(this);
     Sound music = new Sound();
@@ -40,7 +42,13 @@ public class GamePanel extends JPanel implements Runnable{
 
     //Entity and object
     public Player player = new Player(this, keyH);
-    public SuperObject obj[] = new SuperObject[10];
+    public Entity[] enemies = new Entity[10];
+    public SuperObject[] obj = new SuperObject[10];
+
+    //game state
+    public int gameState;
+    public final int playState = 1;
+    public final int pauseState = 2;
 
 
     public GamePanel() {
@@ -56,7 +64,9 @@ public class GamePanel extends JPanel implements Runnable{
     public void setUpGame() {
 
         aSetter.setObject();
+        aSetter.setEnemy();
         playMusic(0);
+        gameState = playState;
     }
 
 //    @Override
@@ -122,7 +132,20 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
     public void update() {
-        player.update();
+
+        if(gameState == playState) {
+
+            for(int i = 0; i < enemies.length; i++) {
+                if(enemies[i] != null) {
+                    enemies[i].update();
+                }
+            }
+
+            player.update();
+        }
+        else if(gameState == pauseState) {
+            //grdrfgsdg
+        }
     }
 
     @Override
@@ -138,7 +161,7 @@ public class GamePanel extends JPanel implements Runnable{
         }
 
         //It's important what you draw first!!!!!
-        //tile
+        //tile without collision
         tileManager.draw(g2);
 
         //object
@@ -147,6 +170,16 @@ public class GamePanel extends JPanel implements Runnable{
                 obj[i].draw(g2, this);
             }
         }
+
+        //enemies
+        for(int i = 0; i < enemies.length; i++) {
+            if(enemies[i] != null) {
+                enemies[i].draw(g2);
+            }
+        }
+
+        //tile with collision
+        tileManager.drawWithCollision(g2);
 
         //player
         player.draw(g2);
