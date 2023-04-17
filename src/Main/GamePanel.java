@@ -47,13 +47,14 @@ public class GamePanel extends JPanel implements Runnable{
 
     //game state
     public int gameState;
+    public final int titleState = 0;
     public final int playState = 1;
     public final int pauseState = 2;
 
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
-        this.setBackground(Color.WHITE);
+        this.setBackground(Color.BLACK);
         this.setDoubleBuffered(true);
 
         this.addKeyListener(keyH);
@@ -65,7 +66,7 @@ public class GamePanel extends JPanel implements Runnable{
 
         aSetter.setObject();
         aSetter.setEnemy();
-        playMusic(0);
+//        playMusic(0);
         gameState = playState;
     }
 
@@ -160,40 +161,47 @@ public class GamePanel extends JPanel implements Runnable{
             drawStart = System.nanoTime();
         }
 
-        //It's important what you draw first!!!!!
-        //tile without collision
-        tileManager.draw(g2);
-
-        //object
-        for(int i = 0; i < obj.length; i++) {
-            if(obj[i] != null) {
-                obj[i].draw(g2, this);
-            }
+        //title state
+        if(gameState == titleState) {
+            ui.draw(g2);
         }
+        //other
+        else {
+            //It's important what you draw first!!!!!
+            //tile without collision
+            tileManager.draw(g2);
 
-        //enemies
-        for(int i = 0; i < enemies.length; i++) {
-            if(enemies[i] != null) {
-                enemies[i].draw(g2);
+            //object
+            for (int i = 0; i < obj.length; i++) {
+                if (obj[i] != null) {
+                    obj[i].draw(g2, this);
+                }
             }
-        }
 
-        //tile with collision
-        tileManager.drawWithCollision(g2);
+            //enemies
+            for (int i = 0; i < enemies.length; i++) {
+                if (enemies[i] != null) {
+                    enemies[i].draw(g2);
+                }
+            }
 
-        //player
-        player.draw(g2);
+            //tile with collision
+            tileManager.drawWithCollision(g2);
 
-        //UI
-        ui.draw(g2);
+            //player
+            player.draw(g2);
 
-        //debug
-        if(keyH.checkDrawTime) {
-            long drawEnd = System.nanoTime();
-            long passed = drawEnd - drawStart;
-            g2.setColor(Color.WHITE);
-            g2.drawString("DrawTime: " + passed, 10, 400);
-            System.out.println("DrawTime: " + passed);
+            //UI
+            ui.draw(g2);
+
+            //debug
+            if (keyH.checkDrawTime) {
+                long drawEnd = System.nanoTime();
+                long passed = drawEnd - drawStart;
+                g2.setColor(Color.WHITE);
+                g2.drawString("DrawTime: " + passed, 10, 400);
+                System.out.println("DrawTime: " + passed);
+            }
         }
 
         g2.dispose();

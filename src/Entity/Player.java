@@ -10,7 +10,8 @@ public class Player extends Entity{
 
     KeyHandler keyH;
 
-    public final int screenX;
+    public final int middleScreenX;
+    public int screenX;
     double accelerationHorizontal;
     int maxHorizontalVelocity;
     boolean jumping;
@@ -44,7 +45,7 @@ public class Player extends Entity{
         maxHorizontalVelocity = gp.FPS/12;
 
 
-        screenX = (gp.screenWidth - gp.tileWidth) / 2;
+        middleScreenX = (gp.screenWidth - gp.tileWidth) / 2;
 
         solidArea = new Rectangle();
         solidArea.x = 1 * gp.scale;
@@ -83,7 +84,7 @@ public class Player extends Entity{
     }
 
     public void setDefaultValues() {
-        worldX = 2000;
+        worldX = 4000;
         y = 5 * gp.tileHeight;
         velocityHorizontal = 0.0;
         velocityVertical = 0.0;
@@ -162,7 +163,7 @@ public class Player extends Entity{
 
         if(keyH.up && distanceJumped < 180 && !falling && (jumping || gp.cChecker.checkIfStandingOnSth(this))) {
             if(jumping == false) {
-                gp.playSE(2);
+//                gp.playSE(2);
             }
 
             jumping = true;
@@ -248,6 +249,16 @@ public class Player extends Entity{
             }
         }
 
+        if(worldX < (gp.screenWidth-gp.tileWidth)/2) {
+            screenX = worldX;
+        }
+        else if(worldX > gp.worldWidth - (gp.screenWidth + gp.tileWidth)/2) {
+            screenX = worldX - gp.worldWidth + gp.screenWidth;
+        }
+        else {
+            screenX = middleScreenX;
+        }
+
         g2.drawImage(image, screenX, y, null);
     }
 
@@ -255,15 +266,15 @@ public class Player extends Entity{
         if(index != 999) {
             switch (gp.obj[index].name) {
                 case "Coin":
-                    gp.playSE(1);
+//                    gp.playSE(1);
                     coins++;
                     gp.obj[index] = null;
                     break;
-                case "Goal Pole":
-                    gp.ui.gameFinished = true;
-                    gp.stopMusic();
-                    gp.playSE(3);
-                    break;
+//                case "Goal Pole":
+//                    gp.ui.gameFinished = true;
+//                    gp.stopMusic();
+//                    gp.playSE(3);
+//                    break;
             }
         }
     }

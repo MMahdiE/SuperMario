@@ -88,13 +88,29 @@ public class TileManager {
 
         while(row < gp.maxScreenRow) {
             while(worldCol < gp.maxWorldCol) {
-
                 int worldX = worldCol * gp.tileWidth;
-                int screenX = worldX - gp.player.worldX + gp.player.screenX;
+                if(gp.player.worldX < (gp.screenWidth - gp.tileWidth)/2) {
+                    if(worldX - gp.tileWidth < gp.screenWidth) {
+                        if (tile[mapTileNum[worldCol][row]].collision == false) {
+                            g2.drawImage(tile[mapTileNum[worldCol][row]].image, worldX, y, null);
+                        }
+                    }
+                }
+                else if(gp.player.worldX > gp.worldWidth - (gp.screenWidth + gp.tileWidth)/2) {
+                    if(worldX + gp.tileWidth > gp.worldWidth - gp.screenWidth) {
+                        if (tile[mapTileNum[worldCol][row]].collision == false) {
+                            g2.drawImage(tile[mapTileNum[worldCol][row]].image, worldX - gp.worldWidth + gp.screenWidth, y, null);
+                        }
+                    }
+                }
+                else {
 
-                if(worldX + gp.tileWidth > gp.player.worldX - gp.player.screenX && worldX - gp.tileWidth < gp.player.worldX + gp.player.screenX) {
-                    if(tile[mapTileNum[worldCol][row]].collision == false) {
-                        g2.drawImage(tile[mapTileNum[worldCol][row]].image, screenX, y, null);
+                    int screenX = worldX - gp.player.worldX + gp.player.screenX;
+
+                    if (worldX + gp.tileWidth > gp.player.worldX - gp.player.screenX && worldX - gp.tileWidth < gp.player.worldX + gp.player.screenX) {
+                        if (tile[mapTileNum[worldCol][row]].collision == false) {
+                            g2.drawImage(tile[mapTileNum[worldCol][row]].image, screenX, y, null);
+                        }
                     }
                 }
                 worldCol++;
@@ -112,13 +128,28 @@ public class TileManager {
 
         while(row < gp.maxScreenRow) {
             while(worldCol < gp.maxWorldCol) {
-
                 int worldX = worldCol * gp.tileWidth;
-                int screenX = worldX - gp.player.worldX + gp.player.screenX;
+                if(gp.player.worldX < (gp.screenWidth - gp.tileWidth)/2) {
+                    if(worldX - gp.tileWidth < gp.screenWidth) {
+                        if (tile[mapTileNum[worldCol][row]].collision == true) {
+                            g2.drawImage(tile[mapTileNum[worldCol][row]].image, worldX, y, null);
+                        }
+                    }
+                }
+                else if(gp.player.worldX > gp.worldWidth - (gp.screenWidth + gp.tileWidth)/2) {
+                    if(worldX + gp.tileWidth > gp.worldWidth - gp.screenWidth) {
+                        if (tile[mapTileNum[worldCol][row]].collision == true) {
+                            g2.drawImage(tile[mapTileNum[worldCol][row]].image, worldX - gp.worldWidth + gp.screenWidth, y, null);
+                        }
+                    }
+                }
+                else {
+                    int screenX = worldX - gp.player.worldX + gp.player.screenX;
 
-                if(worldX + gp.tileWidth > gp.player.worldX - gp.player.screenX && worldX - gp.tileWidth < gp.player.worldX + gp.player.screenX) {
-                    if(tile[mapTileNum[worldCol][row]].collision == true) {
-                        g2.drawImage(tile[mapTileNum[worldCol][row]].image, screenX, y, null);
+                    if (worldX + gp.tileWidth > gp.player.worldX - gp.player.screenX && worldX - gp.tileWidth < gp.player.worldX + gp.player.screenX) {
+                        if (tile[mapTileNum[worldCol][row]].collision == true) {
+                            g2.drawImage(tile[mapTileNum[worldCol][row]].image, screenX, y, null);
+                        }
                     }
                 }
                 worldCol++;
